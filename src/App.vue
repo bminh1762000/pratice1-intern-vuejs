@@ -7,7 +7,9 @@
           <p>250$</p>
         </div>
         <div class="float-right">
-          <button>See less</button>
+          <button @click="modeView === 'more' ? seeLess : seeMore">
+            {{ modeView === "more" ? "See less" : "See more" }}
+          </button>
         </div>
       </div>
       <ul>
@@ -23,13 +25,12 @@
 
 <script>
 import UserItem from "./components/UserItem.vue";
-import BaseCard from "./components/UI/BaseCard.vue";
+import  axios  from "axios";
 
 export default {
   name: "App",
   components: {
     UserItem,
-    BaseCard,
   },
   data() {
     return {
@@ -75,13 +76,24 @@ export default {
           status: "closed",
         },
       ],
+      filterUserInfo: [],
+      modeView: "more",
     };
   },
   methods: {
-    seeLess(){
-      
-    }
-  }
+    seeLess() {
+      this.modeView = "less";
+      this.filterUserInfo = this.userInfos.filter((info) => info.id <= 3);
+    },
+    seeMore() {
+      this.modeView = "more";
+      this.this.filterUserInfo = this.userInfos;
+    },
+  },
+  async created() {
+    const resData = await axios.get("https://jsonplaceholder.typicode.com/users");
+    console.log(resData);
+  },
 };
 </script>
 
