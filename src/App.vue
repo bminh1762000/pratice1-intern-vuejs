@@ -1,35 +1,19 @@
 <template>
   <div>
     <div v-if="filterUserInfo.length > 0">
-      <base-card>
-        <div class="flex justify-between items-center p-4">
-          <div>
-            <p class="text-bold text-left">Lead</p>
-            <p class="text-gray-400">19,805$ - 2 deals</p>
-          </div>
-          <div>
-            <p>{{ currentPage }}/{{ totalPage }}</p>
-          </div>
-          <div>
-            <button
-              @click="seeLess"
-              :disabled="isPrevDisable"
-              class="px-4 py-2 bg-green-400 rounded-lg mr-4"
-            >
-              Previous
-            </button>
-            <button
-              class="px-4 py-2 bg-green-400 rounded-lg"
-              :class="{ 'btn-disabled': isNextDisable }"
-              :disabled="isNextDisable"
-              @click="seeMore"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      </base-card>
+      <header-page
+        :currentPage="currentPage"
+        :totalPage="totalPage"
+      ></header-page>
       <table-user :listUser="filterUserInfo"></table-user>
+      <pagination
+        :listPage="getPaginationGroup"
+        :currentPage="currentPage"
+        :totalPage="totalPage"
+        :changePage="changePage"
+        :seeLess="seeLess"
+        :seeMore="seeMore"
+      ></pagination>
     </div>
     <div v-if="filterUserInfo.length === 0">
       <with-spinner></with-spinner>
@@ -40,6 +24,8 @@
 <script>
 import TableUser from "./components/TableUser.vue";
 import WithSpinner from "./components/WithSpinner.vue";
+import Pagination from "./components/Pagination.vue";
+import HeaderPage from "./components/HeaderPage.vue";
 import { getListUser } from "./api/getListUser.js";
 
 export default {
@@ -47,6 +33,8 @@ export default {
   components: {
     TableUser,
     WithSpinner,
+    Pagination,
+    HeaderPage,
   },
   data() {
     return {
@@ -83,6 +71,9 @@ export default {
         this.currentPage * this.itemPerpage
       );
     },
+    changePage(value) {
+      this.currentPage = value;
+    },
   },
   computed: {
     isPrevDisable() {
@@ -97,10 +88,16 @@ export default {
       }
       return false;
     },
+    getPaginationGroup() {
+      let start = Math.floor((this.currentPage - 1) / 4) * 4;
+      return new Array(4)
+        .fill()
+        .map((_, idx) => start + idx + 1)
+        .filter((i) => i <= this.totalPage);
+    },
   },
   async mounted() {
     const listUser = await getListUser();
-    console.log(listUser)
     this.userInfos = listUser;
     this.totalPage = Math.ceil(this.userInfos.length / this.itemPerpage);
     this.filterUserInfo = listUser.slice(0, this.itemPerpage);
@@ -140,7 +137,8 @@ input:focus {
 }
 
 .btn-disabled {
-  background-color: none!;
+  background-color: none !important;
   cursor: not-allowed;
+  pointer-events: none;
 }
 </style>

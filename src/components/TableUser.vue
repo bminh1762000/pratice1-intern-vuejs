@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-8">
     <table class="mx-auto" style="width: 90%">
       <user-item
         v-for="info in listUser"

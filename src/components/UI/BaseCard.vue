@@ -11,7 +11,7 @@ export default {};
 <style scoped>
 section {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  margin: 1rem auto;
+  margin: 5rem auto 3rem auto;
   border-radius: 10px;
   text-align: center;
   width: 90%;
