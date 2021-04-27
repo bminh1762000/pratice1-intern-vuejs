@@ -2,7 +2,7 @@
   <base-card>
     <li>
       <ul class="list-none flex flex-row justify-between items-center">
-        <li class="text-left">
+        <li>
           <img
             src="https://thumbs.dreamstime.com/z/gentleman-avatar-profile-icon-image-default-user-hairstyle-vector-illustration-182197665.jpg"
             alt=""
@@ -11,22 +11,22 @@
         </li>
         <li class="pr-4">
           <p>
-            <a href="">{{ info.fullName }}</a>
+            <a href="#">{{ info.name }}</a>
           </p>
         </li>
         <li class="pr-4">
-          <p>{{ info.role }}</p>
+          <p>{{ info.street }}</p>
         </li>
         <li class="pr-4">
           <p>{{ info.company }}</p>
         </li>
         <li class="pr-4">
-          <p>{{ info.telephone }}</p>
+          <p>{{ info.phone }}</p>
         </li>
         <li class="pr-4">
           <div>
             <span :style="userStatus">
-              Open - Not contacted
+              {{info.status=== 'open' ? 'Open - Not contacted' : 'Closed - Disqualfied'}}
             </span>
           </div>
         </li>
