@@ -7,23 +7,29 @@
             <p class="text-bold text-left">Lead</p>
             <p class="text-gray-400">19,805$ - 2 deals</p>
           </div>
-          <div class="float-right">
-            <button @click="seeLess" v-if="modeView === 'more'">
-              Seeless
+          <div>
+            <p>{{ currentPage }}/{{ totalPage }}</p>
+          </div>
+          <div>
+            <button
+              @click="seeLess"
+              :disabled="isPrevDisable"
+              class="px-4 py-2 bg-green-400 rounded-lg mr-4"
+            >
+              Previous
             </button>
-            <button @click="seeMore" v-if="modeView === 'less'">
-              Seemore
+            <button
+              class="px-4 py-2 bg-green-400 rounded-lg"
+              :class="{ 'btn-disabled': isNextDisable }"
+              :disabled="isNextDisable"
+              @click="seeMore"
+            >
+              Next
             </button>
           </div>
         </div>
       </base-card>
-      <table class="mx-auto" style="width: 90%">
-        <user-item
-          v-for="info in filterUserInfo"
-          :key="info.id"
-          :info="info"
-        ></user-item>
-      </table>
+      <table-user :listUser="filterUserInfo"></table-user>
     </div>
     <div v-if="filterUserInfo.length === 0">
       <with-spinner></with-spinner>
@@ -32,14 +38,14 @@
 </template>
 
 <script>
-import UserItem from "./components/UserItem.vue";
+import TableUser from "./components/TableUser.vue";
 import WithSpinner from "./components/WithSpinner.vue";
 import { getListUser } from "./api/getListUser.js";
 
 export default {
   name: "App",
   components: {
-    UserItem,
+    TableUser,
     WithSpinner,
   },
   data() {
@@ -47,23 +53,57 @@ export default {
       userInfos: [],
       filterUserInfo: [],
       modeView: "more",
+      itemPerpage: 3,
+      currentPage: 1,
+      totalPage: 0,
     };
   },
   methods: {
     seeLess() {
-      this.modeView = "less";
-      const length = this.userInfos.length / 2;
-      this.filterUserInfo = this.userInfos.filter((info) => info.id <= length);
+      if (this.currentPage <= 1) {
+        this.currentPage = 1;
+      }
+      if (this.currentPage > 1 && this.currentPage <= this.totalPage) {
+        this.currentPage--;
+      }
+      this.filterUserInfo = this.userInfos.slice(
+        (this.currentPage - 1) * this.itemPerpage,
+        this.currentPage * this.itemPerpage
+      );
     },
     seeMore() {
-      this.modeView = "more";
-      this.filterUserInfo = this.userInfos;
+      if (this.currentPage == this.totalPage) {
+        this.currentPage = this.totalPage;
+      }
+      if (this.currentPage) {
+        this.currentPage++;
+      }
+      this.filterUserInfo = this.userInfos.slice(
+        (this.currentPage - 1) * this.itemPerpage,
+        this.currentPage * this.itemPerpage
+      );
+    },
+  },
+  computed: {
+    isPrevDisable() {
+      if (this.currentPage <= 1) {
+        return true;
+      }
+      return false;
+    },
+    isNextDisable() {
+      if (this.currentPage >= this.totalPage) {
+        return true;
+      }
+      return false;
     },
   },
   async mounted() {
     const listUser = await getListUser();
+    console.log(listUser)
     this.userInfos = listUser;
-    this.filterUserInfo = listUser;
+    this.totalPage = Math.ceil(this.userInfos.length / this.itemPerpage);
+    this.filterUserInfo = listUser.slice(0, this.itemPerpage);
   },
 };
 </script>
@@ -97,5 +137,10 @@ table {
 button:focus,
 input:focus {
   outline: none;
+}
+
+.btn-disabled {
+  background-color: none!;
+  cursor: not-allowed;
 }
 </style>
