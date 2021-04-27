@@ -17,18 +17,13 @@
           </div>
         </div>
       </base-card>
-      <div>
-        <ul class="text-left">
-          <user-item
-            v-for="info in filterUserInfo"
-            :key="info.id"
-            :info="info"
-          ></user-item>
-        </ul>
-      </div>
-      <!-- <div>
-        <table-user :listUser="filterUserInfo"></table-user>
-      </div> -->
+      <table class="mx-auto" style="width: 90%">
+        <user-item
+          v-for="info in filterUserInfo"
+          :key="info.id"
+          :info="info"
+        ></user-item>
+      </table>
     </div>
     <div v-if="filterUserInfo.length === 0">
       <with-spinner></with-spinner>
@@ -39,15 +34,13 @@
 <script>
 import UserItem from "./components/UserItem.vue";
 import WithSpinner from "./components/WithSpinner.vue";
-// import TableUser from "./components/TableUser.vue";
-import axios from "axios";
+import { getListUser } from "./api/getListUser.js";
 
 export default {
   name: "App",
   components: {
     UserItem,
     WithSpinner,
-    // TableUser,
   },
   data() {
     return {
@@ -67,21 +60,10 @@ export default {
       this.filterUserInfo = this.userInfos;
     },
   },
-  mounted() {
-    axios.get("https://jsonplaceholder.typicode.com/users").then((resData) => {
-      const listUser = resData.data.map((user) => {
-        return {
-          id: user.id,
-          street: user.address.street,
-          name: user.name,
-          phone: user.phone,
-          company: user.company.name,
-          status: user.id % 2 === 0 ? "open" : "closed",
-        };
-      });
-      this.userInfos = listUser;
-      this.filterUserInfo = listUser;
-    });
+  async mounted() {
+    const listUser = await getListUser();
+    this.userInfos = listUser;
+    this.filterUserInfo = listUser;
   },
 };
 </script>
@@ -101,5 +83,19 @@ export default {
 
 html {
   margin: 0;
+}
+
+table,
+th,
+td {
+  padding: 5px;
+}
+table {
+  border-spacing: 2rem;
+}
+
+button:focus,
+input:focus {
+  outline: none;
 }
 </style>

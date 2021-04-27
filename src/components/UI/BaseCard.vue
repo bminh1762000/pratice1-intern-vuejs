@@ -14,8 +14,6 @@ section {
   margin: 1rem auto;
   border-radius: 10px;
   text-align: center;
-  padding: 1rem;
   width: 90%;
-  max-width: 65rem;
 }
 </style>

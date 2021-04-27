@@ -1,38 +1,41 @@
 <template>
-  <base-card>
-    <li>
-      <ul class="list-none flex flex-row justify-between items-center">
-        <li>
-          <img
-            src="https://thumbs.dreamstime.com/z/gentleman-avatar-profile-icon-image-default-user-hairstyle-vector-illustration-182197665.jpg"
-            alt=""
-            class="w-10 h-10 rounded-full object-cover"
-          />
-        </li>
-        <li class="pr-4">
-          <p>
-            <a href="#">{{ info.name }}</a>
-          </p>
-        </li>
-        <li class="pr-4">
-          <p>{{ info.street }}</p>
-        </li>
-        <li class="pr-4">
-          <p>{{ info.company }}</p>
-        </li>
-        <li class="pr-4">
-          <p>{{ info.phone }}</p>
-        </li>
-        <li class="pr-4">
-          <div>
-            <span :style="userStatus">
-              {{info.status=== 'open' ? 'Open - Not contacted' : 'Closed - Disqualfied'}}
-            </span>
-          </div>
-        </li>
-      </ul>
-    </li>
-  </base-card>
+  <tr>
+    <td>
+      <img
+        src="https://thumbs.dreamstime.com/z/gentleman-avatar-profile-icon-image-default-user-hairstyle-vector-illustration-182197665.jpg"
+        alt=""
+        class="w-10 h-10 rounded-full object-cover"
+      />
+    </td>
+    <td>
+      <p>
+        <a href="#">{{ info.name }}</a>
+      </p>
+    </td>
+    <td>
+      <p>{{ info.street }}</p>
+    </td>
+    <td>
+      <p>{{ info.company }}</p>
+    </td>
+    <td>
+      <p>{{ info.phone }}</p>
+    </td>
+    <td>
+      <div>
+        <span :style="userStatus">
+          {{
+            info.status === "open"
+              ? "Open - Not contacted"
+              : "Closed - Disqualfied"
+          }}
+        </span>
+      </div>
+    </td>
+    <td>
+      Sort
+    </td>
+  </tr>
 </template>
 
 <script>
@@ -53,3 +56,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* tr {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 10px;
+  padding: 2rem;
+} */
+</style>
