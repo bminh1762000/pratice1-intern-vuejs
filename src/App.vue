@@ -5,9 +5,11 @@
         :currentPage="currentPage"
         :totalPage="totalPage"
       ></header-page>
-      <table-user :listUser="filterUserInfo"></table-user>
+      <table-user
+        :listUser="filterUserInfo"
+        @delete-item="deleteItem"
+      ></table-user>
       <pagination
-        :listPage="getPaginationGroup"
         :currentPage="currentPage"
         :totalPage="totalPage"
         :changePage="changePage"
@@ -18,6 +20,7 @@
     <div v-if="filterUserInfo.length === 0">
       <with-spinner></with-spinner>
     </div>
+    <edit-form ></edit-form>
   </div>
 </template>
 
@@ -26,6 +29,7 @@ import TableUser from "./components/TableUser.vue";
 import WithSpinner from "./components/WithSpinner.vue";
 import Pagination from "./components/Pagination.vue";
 import HeaderPage from "./components/HeaderPage.vue";
+import EditForm from "./components/EditForm.vue";
 import { getListUser } from "./api/getListUser.js";
 
 export default {
@@ -35,12 +39,12 @@ export default {
     WithSpinner,
     Pagination,
     HeaderPage,
+    EditForm,
   },
   data() {
     return {
       userInfos: [],
       filterUserInfo: [],
-      modeView: "more",
       itemPerpage: 3,
       currentPage: 1,
       totalPage: 0,
@@ -73,27 +77,19 @@ export default {
     },
     changePage(value) {
       this.currentPage = value;
+      this.filterUserInfo = this.userInfos.slice(
+        (this.currentPage - 1) * this.itemPerpage,
+        this.currentPage * this.itemPerpage
+      );
     },
-  },
-  computed: {
-    isPrevDisable() {
-      if (this.currentPage <= 1) {
-        return true;
-      }
-      return false;
-    },
-    isNextDisable() {
-      if (this.currentPage >= this.totalPage) {
-        return true;
-      }
-      return false;
-    },
-    getPaginationGroup() {
-      let start = Math.floor((this.currentPage - 1) / 4) * 4;
-      return new Array(4)
-        .fill()
-        .map((_, idx) => start + idx + 1)
-        .filter((i) => i <= this.totalPage);
+    deleteItem(id) {
+      this.userInfos = this.userInfos.filter((user) => user.id !== id);
+      this.totalPage = Math.ceil(this.userInfos.length / this.itemPerpage);
+      this.filterUserInfo = this.userInfos.slice(
+        (this.currentPage - 1) * this.itemPerpage,
+        this.currentPage * this.itemPerpage
+      );
+      alert("Delete successfull");
     },
   },
   async mounted() {

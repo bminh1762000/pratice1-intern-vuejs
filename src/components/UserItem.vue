@@ -33,7 +33,10 @@
       </div>
     </td>
     <td>
-      Sort
+      <button class="text-blue-400">Edit</button>
+    </td>
+    <td>
+      <button class="text-red-500" @click="deleteItem">Delete</button>
     </td>
   </tr>
 </template>
@@ -53,6 +56,14 @@ export default {
       }
       return { color: "red" };
     },
+  },
+  methods: {
+    deleteItem() {
+      this.$emit("delete-item", this.info.id);
+    },
+    onEdit(){
+      this.$emit('on-edit');
+    }
   },
 };
 </script>

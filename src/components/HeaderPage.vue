@@ -6,6 +6,10 @@
         <p class="text-gray-400">19,805$ - 2 deals</p>
       </div>
       <div>
+        <label for="search" class="mr-4">Search</label>
+        <input type="text" id="search" class="border border-gray-400 rounded-xl"/>
+      </div>
+      <div>
         <p>{{ currentPage }}/{{ totalPage }}</p>
       </div>
     </div>
@@ -26,3 +30,6 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+</style>

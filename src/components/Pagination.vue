@@ -8,7 +8,7 @@
       Previous
     </button>
     <button
-      v-for="(value, idx) in listPage"
+      v-for="(value, idx) in getPaginationGroup"
       :key="idx"
       class="py-2 px-4 bg-white rounded-md"
       :class="{ isActive: value == currentPage }"
@@ -30,10 +30,6 @@
 <script>
 export default {
   props: {
-    listPage: {
-      type: Array,
-      required: true,
-    },
     currentPage: {
       type: Number,
       required: true,
@@ -67,6 +63,13 @@ export default {
         return true;
       }
       return false;
+    },
+    getPaginationGroup() {
+      let start = Math.floor((this.currentPage - 1) / 3) * 3;
+      return new Array(3)
+        .fill()
+        .map((_, idx) => start + idx + 1)
+        .filter((i) => i <= this.totalPage);
     },
   },
 };
